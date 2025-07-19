@@ -15,7 +15,7 @@ app.get("/:id", (req, res) => {
   });
 });
 
-const port = 3000;
+const port = 8080;
 
 app.listen(port, () => {
   console.log("Servidor funcionando certinho!", `http://localhost:${port}`);
