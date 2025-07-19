@@ -1,0 +1,131 @@
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Times New Roman', Times, serif;
+}
+
+.auth-user {
+    border: 1px solid #ccc;
+    display: flex;
+    flex-direction: column;
+    width: 360px;
+    height: 460px;
+    padding: 40px 15px;
+    border-radius: 10px;
+    box-shadow: 1px 1px 12px 3px rgba(0, 0, 0, 0.559);
+}
+
+.auth-user .title-form {
+    font-size: 2rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    transition: 0.5s ease-in;
+}
+
+.auth-user .form-login {
+    width: calc(100%-10px);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.auth-user .box {
+    margin: 10px 5px;
+    width: calc(100% - 10px);
+    border-radius: 5px;
+    padding: 5px 10px;                                                                                                                                            
+    display: flex;
+    align-items: flex-start;
+    flex-direction: column;
+    position: relative;
+}
+
+input:-webkit-autofill {
+    box-shadow: 0 0 0 1000px white inset;
+}
+
+.auth-user .box label {
+    margin-left: 10px;
+    font-size: 1.2rem;
+    transition: all 0.2s ease;
+    position: absolute;
+    left: 15px;
+    top: 0;
+    opacity: 0;
+}
+
+
+.auth-user .box:focus-within label {
+  top: -14px;
+  left: 10px;
+  color: #555;
+  opacity: 1;
+}
+
+.auth-user .box:focus-within input::placeholder {
+    color: transparent;
+}
+
+.auth-user .box input {
+    padding: 10px;
+    height: 45px;
+    width: 100%;
+    font-size: 1.3rem;
+    margin: 5px 0;
+    border: 1px solid #b0b0b0;
+    outline: none;
+    border-radius: 5px;
+    background-color: transparent;
+}
+
+.auth-user button[type="submit"] {
+    padding: 8px 30px;
+    font-size: 1.3rem;
+    margin-top: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: 0.3s ease;
+    background-color: black;
+    color: white;
+    border-radius: 5px;
+    border: none;
+}
+
+.auth-user button[type="submit"]:hover {
+    opacity: 0.7;
+
+}
+
+.auth-user .box-change {
+    margin-top: -3px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-around;
+    width: 80%;
+    margin-bottom: 20px;
+}
+
+.auth-user .box-change #forget-password, #have-account {
+    color: #000000ba;
+    padding: 5px 12px;
+    border-radius: 5px;
+    font-weight: 300;
+    cursor: pointer;
+}
+
+
+.auth-user .box-change #forget-password:hover, #have-account:hover {
+    background-color: #ccc;
+    color: black;
+}
+
+.auth-user .form-signup select {
+    padding: 10px;
+    width: 100%;
+    font-size: 1.3rem;
+
+}
