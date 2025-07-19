@@ -5,8 +5,9 @@ export default function AuthUser() {
   const [inputValue, setInputValue] = useState({
     inputEmailLogin: "",
     inputPasswordLogin: "",
+    inputPasswordSignup: "",
     inputEmailSignup: "",
-    selectCountry: "",
+    selectCountry: "Brasil",
     inputBussnessName: "",
   });
   document.title = "Auth"
@@ -34,6 +35,7 @@ export default function AuthUser() {
   return (
     <div className="auth-user">
       {showSignupForm ? (
+        
         //Form login
         <form className="form-login" method="POST" onSubmit={handleFormLogin}>
           <p className="title-form">Autenticação</p>
@@ -72,9 +74,28 @@ export default function AuthUser() {
           <button type="submit">Entrar</button>
         </form>
       ) : (
+
         //Form signup
         <form className="form-signup" method="POST" onSubmit={handleFormSignup}>
           <p className="title-form">Criar conta</p>
+
+          <div className="box">
+            <select
+              name="selectCountry"
+              id="selectCountry"
+              onChange={handleChange}
+              value={inputValue.selectCountry}
+              required
+            >
+              <option value="" disabled>
+                Selecione pais
+              </option>
+              <option value="Brasil" defaultValue={inputValue.selectCountry}>Brasil</option>
+              <option value="Chile">Chile</option>
+              <option value="Mexico">Mexico</option>
+            </select>
+          </div>
+
           <div className="box">
             <label htmlFor="inputBussnessName">Nome da empresa</label>
             <input
@@ -102,25 +123,22 @@ export default function AuthUser() {
           </div>
 
           <div className="box">
-            <select
-              name="selectCountry"
-              id="selectCountry"
+            <label htmlFor="inputPasswordSignup">Criar uma senha</label>
+            <input
+              type="password"
+              name="inputPasswordSignup"
+              id="inputPasswordSignup"
+              placeholder="Criar uma senha"
+              value={inputValue.inputPasswordSignup}
               onChange={handleChange}
-              value={inputValue.selectCountry}
               required
-            >
-              <option value="" disabled>
-                Selecione pais
-              </option>
-              <option value="Brasil">Brasil</option>
-              <option value="Chile">Chile</option>
-              <option value="Mexico">Mexico</option>
-            </select>
+            />
           </div>
 
           <div className="box-change">
+            <p>Já tem cadastro?</p>
             <p id="have-account" onClick={showSignup}>
-              Já tenho uma conta!
+              Acesse sua conta!
             </p>
           </div>
           <button type="submit">Criar</button>

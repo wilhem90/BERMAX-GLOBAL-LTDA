@@ -9,17 +9,23 @@
     border: 1px solid #ccc;
     display: flex;
     flex-direction: column;
-    width: 360px;
-    height: 460px;
-    padding: 40px 15px;
+    text-align: center;
+    width: 390px;
+    padding: 2rem 15px;
     border-radius: 10px;
     box-shadow: 1px 1px 12px 3px rgba(0, 0, 0, 0.559);
 }
 
 .auth-user .title-form {
-    font-size: 2rem;
+    margin: auto;
+    font-size: 1.3rem;
     font-weight: bold;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    border-bottom: 3px solid #ccc;
+    border-radius: 2px;
+    width: 150px;
+    padding: 5px 10px;
+    color: black;
     transition: 0.5s ease-in;
 }
 
@@ -49,7 +55,7 @@ input:-webkit-autofill {
 
 .auth-user .box label {
     margin-left: 10px;
-    font-size: 1.2rem;
+    font-size: 1rem;
     transition: all 0.2s ease;
     position: absolute;
     left: 15px;
@@ -82,20 +88,24 @@ input:-webkit-autofill {
 }
 
 .auth-user button[type="submit"] {
-    padding: 8px 30px;
+    padding: 8px 20px;
     font-size: 1.3rem;
     margin-top: 20px;
     font-weight: bold;
     cursor: pointer;
+    width: 180px;
     transition: 0.3s ease;
-    background-color: black;
+    background-color: green;
     color: white;
     border-radius: 5px;
+    letter-spacing: 2px;
     border: none;
 }
 
 .auth-user button[type="submit"]:hover {
     opacity: 0.7;
+    background-color: black;
+    color: white;
 
 }
 
@@ -104,9 +114,10 @@ input:-webkit-autofill {
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-around;
     width: 80%;
+    align-items: center;
     margin-bottom: 20px;
+     margin-left: 30px;
 }
 
 .auth-user .box-change #forget-password, #have-account {
@@ -115,6 +126,7 @@ input:-webkit-autofill {
     border-radius: 5px;
     font-weight: 300;
     cursor: pointer;
+    margin-left: 5px;
 }
 
 
@@ -127,5 +139,6 @@ input:-webkit-autofill {
     padding: 10px;
     width: 100%;
     font-size: 1.3rem;
-
+    background-color: white;
+    border-radius: 5px;
 }
