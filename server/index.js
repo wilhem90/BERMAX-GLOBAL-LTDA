@@ -25,7 +25,7 @@ app.use((_, res) => {
   res.status(404).json({ error: "Endpoint não encontrado" });
 });
 
-const port = process.env.PORT || 8080;
+const port = process.env.PORT || 3000;
 
 app.listen(port, () => {
   console.log(`Servidor rodando na porta http://localhost:${port}/api`);
