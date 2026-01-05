@@ -1,2 +1,2 @@
 .env
-server\src\db\migrations\users.sql
+server/src/db/migrations/users.sql
