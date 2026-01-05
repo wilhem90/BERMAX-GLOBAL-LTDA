@@ -1,2 +1,1 @@
-
-SELECT * FROM USERS;
+SELECT * FROM users ORDER BY createdAt ASC;
