@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const routerCentral = require("./src/routes/routerCentral.js");
+const routerCentral = require("./src/routes/central.routes.js");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
@@ -28,5 +28,5 @@ app.use((_, res) => {
 const port = process.env.PORT || 8080;
 
 app.listen(port, () => {
-  console.log(`Servidor rodando na porta ${port}`);
+  console.log(`Servidor rodando na porta http://localhost:${port}`);
 });
