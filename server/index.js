@@ -1,6 +1,6 @@
 require("dotenv").config();
 const express = require("express");
-const routerCentral = require("./routerCentral.js");
+const routerCentral = require("./src/routes/routerCentral.js");
 const app = express();
 const cors = require("cors");
 const morgan = require("morgan");
