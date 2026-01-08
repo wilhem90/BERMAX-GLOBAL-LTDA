@@ -1,15 +1,46 @@
+const bcrypt = require("bcrypt");
 const pool = require("../../db/connection");
+const { ulid } = require("ulid");
+const fixAll = require("../../utils/fixAll");
+const modelUser = require("../../models/users/user.model");
 
 const controlUser = {
-  getUser: async (req, res) => {
+  createUser: async (req, res) => {
     try {
-      const { rows } = await pool.query(
-        "SELECT * FROM users ORDER BY id ASC"
-      );
+      const { full_name, email, doc_id, device_id, device_Name, password } =
+        req.body;
 
-      res.status(200).json({
+      if (!full_name || !email || !doc_id || !device_id || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Dados obrigatórios não informados",
+        });
+      }
+
+      const userExists = await fixAll.getUserByDocIdByEmail(email, doc_id, 1);
+      if (userExists) {
+        return res.status(409).json({
+          success: false,
+          message: "Usuário já cadastrado",
+        });
+      }
+
+      const hashedPassword = await bcrypt.hash(password, 10);
+      const uid = ulid();
+
+      const refUser = await modelUser.saveData({
+        full_name,
+        email,
+        doc_id,
+        device_id,
+        device_Name,
+        hashedPassword,
+        uid,
+      });
+
+      res.status(201).json({
         success: true,
-        users: rows,
+        message: refUser.message,
       });
     } catch (error) {
       res.status(500).json({
@@ -19,6 +50,46 @@ const controlUser = {
     }
   },
 
+  getuserByDocIdByEmail: async (req, res) => {
+    const { doc_id, email } = req.query;
+    if (!doc_id && !email) {
+      return res.status(400).json({
+        success: true,
+        message: "Deve enviar alguns dados para buscar usuario.",
+      });
+    }
+
+    const userData = modelUser.getData();
+  },
+
+  //Get user
+  getUsers: async (req, res) => {
+    try {
+      const { email: emails } = req.query;
+      console.log(typeof emails, emails);
+
+      if (!emails) {
+        return res.status(400).json({
+          success: false,
+          message: "Deve enviar o email ou doc_id para buscar dados.",
+        });
+      }
+      const users = await modelUser.getData({
+        email: fixAll.tolower_Case(emails),
+      });
+      res.status(200).json({
+        success: true,
+        users,
+      });
+    } catch (error) {
+      res.status(500).json({
+        success: false,
+        message: error.message,
+      });
+    }
+  },
+
+  //Update user
   updateUser: async (req, res) => {
     try {
       const { idUser, name } = req.body;
