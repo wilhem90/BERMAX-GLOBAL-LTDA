@@ -58,7 +58,7 @@ const modelUser = {
   },
 
   //Buscamos datos
-  getData: async (dataUser) => {
+  getDataByEmailOrDocId: async (dataUser) => {
     try {
       const conditions = [];
       const values = [];
@@ -93,6 +93,28 @@ const modelUser = {
 
       const { rows } = await pool.query(query, values);
       return rows[0] || null;
+    } catch (error) {
+      throw error;
+    }
+  },
+
+  getListUserByEmails: async (emails, path = "email") => {
+    try {
+      const query = `
+      SELECT uid,
+      full_name, email,
+      doc_id,
+      role,
+      email_verified,
+      account_active,
+      solde_account,
+      created_at 
+      FROM users
+      WHERE ${path} = ANY($1)
+    `;
+
+      const { rows } = await pool.query(query, [emails]);
+      return rows;
     } catch (error) {
       throw error;
     }

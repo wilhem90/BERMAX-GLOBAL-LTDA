@@ -63,20 +63,22 @@ const controlUser = {
   },
 
   //Get user
-  getUsers: async (req, res) => {
+  getListUserByEmail: async (req, res) => {
     try {
-      const { email: emails } = req.query;
-      console.log(typeof emails, emails);
-
-      if (!emails) {
+      let { email } = req.query;
+      if (!email) {
         return res.status(400).json({
           success: false,
           message: "Deve enviar o email ou doc_id para buscar dados.",
         });
       }
-      const users = await modelUser.getData({
-        email: fixAll.tolower_Case(emails),
-      });
+
+      if (!Array.isArray(email)) {
+        email = [email];
+      }
+
+      const emails = email.map((e) => fixAll.tolower_Case(e));
+      const users = await modelUser.getListUserByEmails(emails, "email");
       res.status(200).json({
         success: true,
         users,
