@@ -1,40 +1,103 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const modelUser = require("../../models/users/user.model");
+
 const middlewareUser = {
   //Criar token
   createToken: async (req, res) => {
-    const { email, password, device_id } = req.body;
-    const update_token = email && password;
+    try {
+      const { email, password, device_id } = req.body;
 
-    //1 Se recebemos o email e a senha vamos verificar para criar o token
-    if (!update_token && !device_id) {
-      console.log(update_token, device_id);
-      return res.status(400).json({
+      // 1. Validação de entrada
+      if (!device_id || !email || !password) {
+        return res.status(400).json({
+          success: false,
+          message: "Dados insuficientes para login.",
+        });
+      }
+
+      // 2. Busca o usuário
+      const user = await modelUser.getDataByEmailOrDocId(req.body);
+
+      // Verifica se o usuário existe antes de comparar o bcrypt
+      if (!user) {
+        return res.status(401).json({
+          success: false,
+          message: "Credenciais incorretas.",
+        });
+      }
+
+      // 3. Verifica a senha
+      const isMatch = bcrypt.compareSync(password, user.password);
+      if (!isMatch) {
+        return res.status(401).json({
+          success: false,
+          message: "Credenciais incorretas.",
+        });
+      }
+
+      // 4. Geração do Token
+      const SECRET_KEY = process.env.SECRET_KEY;
+      const payload = {
+        uid: user.uid,
+        device_id: device_id,
+      };
+      const options = { expiresIn: "1h" };
+
+      const token = jwt.sign(payload, SECRET_KEY, options);
+
+      // 5. Lógica de dispositivo (opcional: salvar log de acesso)
+      await modelUser.getDevice(user.uid, device_id);
+
+      return res.status(200).json({
+        success: true,
+        message: "Token criado com sucesso.",
+        token,
+      });
+    } catch (error) {
+      console.error("Erro no login:", error);
+      return res.status(500).json({
         success: false,
-        message: "Falha ao realizar login.",
+        message: "Erro interno no servidor.",
+      });
+    }
+  },
+
+  verifyToken: async (req, res, next) => {
+    // O token geralmente é enviado no Header 'Authorization'
+    const authHeader = req.headers["authorization"];
+
+    // Formato esperado: "Bearer <TOKEN>"
+    const token = authHeader && authHeader.split(" ")[1];
+
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Acesso negado. Token não fornecido.",
       });
     }
 
-    const isDeviceVerified = middlewareUser.checkDevice(device_id);
-    console.log(isDeviceVerified);
-    const token = "Slaodkofkosakofks";
+    try {
+      const SECRET_KEY = process.env.SECRET_KEY;
 
-    return res.status(200).json({
-      success: true,
-      token,
-    });
-  },
+      // Verifica a assinatura e a expiração (expiresIn)
+      const decoded = jwt.verify(token, SECRET_KEY);
 
-  //Verifica si usuario conectado
-  isLogged: async (token) => {
-    if (!token) {
-      return false;
+      // Adiciona os dados do payload (uid, device_id) ao objeto req
+      req.user = await modelUser.getDataByUid(decoded.uid);
+
+      next(); // Autorizado: segue para a próxima função/rota
+    } catch (error) {
+      return res.status(403).json({
+        success: false,
+        message: "Token inválido ou expirado.",
+      });
     }
-    console.log(token);
-    return true;
   },
 
   checkDevice: async (device_id) => {
-    // const getStatusDevice = await
-    return device_id;
+    const statusDevice = await modelUser.getUser();
+    return statusDevice;
   },
 };
 

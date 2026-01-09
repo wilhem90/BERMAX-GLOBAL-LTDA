@@ -1,8 +1,11 @@
 const bcrypt = require("bcrypt");
 const pool = require("../../db/connection");
-const { ulid } = require("ulid");
+const { v4: uuidv4 } = require("uuid");
+
 const fixAll = require("../../utils/fixAll");
 const modelUser = require("../../models/users/user.model");
+const middlewareUser = require("../../middlewares/users/user.middleware");
+const permisionUser = require("../../middlewares/users/permisions");
 
 const controlUser = {
   createUser: async (req, res) => {
@@ -26,17 +29,19 @@ const controlUser = {
       }
 
       const hashedPassword = await bcrypt.hash(password, 10);
-      const uid = ulid();
+      const uid = uuidv4();
 
       const refUser = await modelUser.saveData({
         full_name,
         email,
         doc_id,
         device_id,
-        device_Name,
+        device_Name: req.headers["user-agent"] || null,
         hashedPassword,
         uid,
       });
+
+      console.log(refUser);
 
       res.status(201).json({
         success: true,
@@ -59,7 +64,28 @@ const controlUser = {
       });
     }
 
-    const userData = modelUser.getData();
+    const userData = await modelUser.getDataByEmailOrDocId({ email, doc_id });
+
+    if (!userData) {
+      return res.status(404).json({
+        success: false,
+        message: "Usuario não encrontrado.",
+      });
+    }
+    console.log(req.user);
+    
+    const isAdMin = permisionUser.isAdmin(req.user.role);
+    if ((email !== req.user.email && doc_id !== req.user.doc_id) || !isAdMin) {
+      return res.status(401).json({
+        success: false,
+        message: "Não esta autorizado.",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      userData,
+    });
   },
 
   //Get user
