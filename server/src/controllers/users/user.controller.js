@@ -4,7 +4,6 @@ const { v4: uuidv4 } = require("uuid");
 
 const fixAll = require("../../utils/fixAll");
 const modelUser = require("../../models/users/user.model");
-const middlewareUser = require("../../middlewares/users/user.middleware");
 const permisionUser = require("../../middlewares/users/permisions");
 
 const controlUser = {

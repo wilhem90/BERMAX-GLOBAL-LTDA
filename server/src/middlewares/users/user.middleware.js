@@ -6,7 +6,7 @@ const middlewareUser = {
   //Criar token
   createToken: async (req, res) => {
     try {
-      const { email, password, device_id } = req.body;
+      const { email, password, expiresIn, device_id } = req.body;
 
       // 1. Validação de entrada
       if (!device_id || !email || !password) {
@@ -42,7 +42,7 @@ const middlewareUser = {
         uid: user.uid,
         device_id: device_id,
       };
-      const options = { expiresIn: "1h" };
+      const options = { expiresIn: expiresIn || "1h" };
 
       const token = jwt.sign(payload, SECRET_KEY, options);
 
@@ -66,14 +66,17 @@ const middlewareUser = {
   verifyToken: async (req, res, next) => {
     // O token geralmente é enviado no Header 'Authorization'
     const authHeader = req.headers["authorization"];
+    const { device_id } = req.headers;
 
     // Formato esperado: "Bearer <TOKEN>"
     const token = authHeader && authHeader.split(" ")[1];
+    console.log(token);
+    const TokenOrDevice = !token ? "Token" : !device_id ? "Device_id" : "";
 
-    if (!token) {
+    if (!token || !device_id) {
       return res.status(401).json({
         success: false,
-        message: "Acesso negado. Token não fornecido.",
+        message: `Acesso negado. ${TokenOrDevice} não fornecido.`,
       });
     }
 

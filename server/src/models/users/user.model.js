@@ -60,12 +60,18 @@ const modelUser = {
   },
 
   getDataByUid: async (uid) => {
-    const { rows } = pool.query("SELECT * FROM users WHERE uid = $1 LIMIT 1", [
-      uid,
-    ]);
-
-    console.log(rows);
-    return rows;
+    try {
+      const { rows } = await pool.query(
+        "SELECT * FROM users WHERE uid = $1 LIMIT 1",
+        [uid]
+      );
+      return rows;
+    } catch (error) {
+      return {
+        success: false,
+        message: "Error interne.",
+      };
+    }
   },
 
   //Buscamos datos
